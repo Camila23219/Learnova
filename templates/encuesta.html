@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<!-- Se importo una fuente desde Google para personalizar más la página -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+<!--Se define la codificación de caracteres para que se acepten acentos y ñ -->
+<meta charset="UTF-8">
+<!-- Este es el titulo -->
+<title>Test de Estilo de Aprendizaje</title>
+
+<style>
+/*Todo lo que esta dentro de style son cosas que utilizamos para hacer que nuestra página se viera mejor*/
+/*El estilo general esta dentro del body*/
+body{
+font-family: 'Playfair Display', serif; /*Fuente*/
+margin:0; /*Aqui se eliminan margenes*/
+background-color:#e0eba4; /*Color de fondo*/
+}
+/*El estilo del encabezado*/
+header{
+text-align:center; /*Se usa para alinear el texto*/
+padding:20px; /*Espacio interior*/
+}
+/*El estilo del logo*/
+header img{
+margin-bottom:10px; /* Espacio debajo de la imagen */
+transition: transform 0.5s; /*Una pequeña animación al pasar el mouse por el logo*/
+}
+/*Con esto se agranda la imágen cuando pasas el mouse por ella*/
+header img:hover{
+transform: scale(1.05); /*La escala de que tanto crece la imágen*/
+}
+/*Este es el estilo del texto principal*/
+h1{
+text-align:center;
+}
+/*Aqui se ajusta el estilo del formulario, el color de fondo, el tamaño del cuadro, 
+si va centrado, el espacio interno, el estilo de bordes y la sombra*/
+form{
+background:white;
+width:650px;
+margin:auto;
+padding:25px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+/*Modificamos el estilo de cada pregunta para que se viera mejor, añadiendo sombra y bordeando
+un poco los bordes*/
+.pregunta{
+background:#f8f8f8;
+padding:15px;
+margin-bottom:15px;
+border-radius:8px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+/*Con esto modificamos el botón de "Enviar" cambiando el color de fondo y texto, añadiendo
+sombra, bordeando los borden y centrando el recuadro*/
+input[type="submit"]{
+background:#3768a0;
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+display:block;
+margin:auto;
+}
+/*Con esto al pasar el mouse por el boton de "enviar" se oscurece un poco*/
+input[type="submit"]:hover{
+background:#2c5685;
+}
+
+</style>
+
+</head>
+
+<body>
+<!-- Encabezado con el logo -->
+<header>
+<img src="/static/logo.png" width="300">
+</header>
+
+<h1>Test de Estilo de Aprendizaje</h1>
+<!-- Formulario que enviará la información a Flask en la ruta /resultado -->
+<form action="/resultado" method="post">
+<!-- Campo para escribir el tema que quiere aprender -->
+<h3>¿Qué tema quieres aprender?</h3>
+<input type="text" name="tema" required>
+
+<hr><!--Linea separadora-->
+<!--Aquí empieza el formulario-->
+<!--El div class es para que cada pregunta este dentro de un bloque separado
+lo que hace que se vea mejor y más organizado-->
+<div class="pregunta">
+<p>1. Cuando aprendes algo nuevo prefieres:</p>
+<!--En cada pregunta se usa <input type="radio"> que significa opción única
+name hace que solo una opción puede seleccionarse
+y value le asigna un valor, que será recibido en el otro documento
+y el required hace que si el usuario no respondió una pregunta no lo dejará avanzar
+y aparecerá un mensaje señalando la pregunta que no contesto-->
+<input type="radio" name="p1" value="visual" required> Ver imágenes<br>
+<input type="radio" name="p1" value="auditivo"> Escuchar explicación<br>
+<input type="radio" name="p1" value="kinestesico"> Practicar<br>
+</div>
+
+<div class="pregunta">
+<p>2. En clase recuerdas mejor:</p>
+<input type="radio" name="p2" value="visual"required> Lo que ves en el pizarrón<br>
+<input type="radio" name="p2" value="auditivo"> Lo que dice el profesor<br>
+<input type="radio" name="p2" value="kinestesico"> Las actividades que hiciste<br>
+</div>
+
+<div class="pregunta">
+<p>3. Cuando estudias usas más:</p>
+<input type="radio" name="p3" value="visual"required> Mapas mentales o dibujos<br>
+<input type="radio" name="p3" value="auditivo"> Leer en voz alta<br>
+<input type="radio" name="p3" value="kinestesico"> Practicar ejercicios<br>
+</div>
+
+<div class="pregunta">
+<p>4. Prefieres aprender con:</p>
+<input type="radio" name="p4" value="visual" required> Videos<br>
+<input type="radio" name="p4" value="auditivo"> Podcasts o explicaciones<br>
+<input type="radio" name="p4" value="kinestesico"> Experimentos<br>
+</div>
+
+<div class="pregunta">
+<p>5. Cuando recuerdas algo piensas en:</p>
+<input type="radio" name="p5" value="visual" required> Imágenes<br>
+<input type="radio" name="p5" value="auditivo"> Sonidos o palabras<br>
+<input type="radio" name="p5" value="auditivo"> Acciones<br>
+</div>
+<div class="pregunta">
+<p>6. En una explicación prefieres:</p>
+<input type="radio" name="p6" value="visual"required> Diagramas<br>
+<input type="radio" name="p6" value="auditivo"> Escuchar la explicación<br>
+<input type="radio" name="p6" value="kinestesico"> Participar<br>
+</div>
+
+<div class="pregunta">
+<p>7. Cuando usas internet prefieres:</p>
+<input type="radio" name="p7" value="visual"required> Ver infografías<br>
+<input type="radio" name="p7" value="auditivo"> Escuchar videos explicativos<br>
+<input type="radio" name="p7" value="kinestesico"> Hacer actividades<br>
+</div>
+
+<div class="pregunta">
+<p>8. Aprendes mejor cuando:</p>
+<input type="radio" name="p8" value="visual"required> Ves ejemplos<br>
+<input type="radio" name="p8" value="auditivo"> Escuchas instrucciones<br>
+<input type="radio" name="p8" value="kinestesico"> Practicas<br>
+</div>
+
+<div class="pregunta">
+<p>9. Cuando explicas algo usas:</p>
+<input type="radio" name="p9" value="visual"required> Dibujos<br>
+<input type="radio" name="p9" value="auditivo"> Palabras<br>
+<input type="radio" name="p9" value="kinestesico"> Demostraciones<br>
+</div>
+
+<div class="pregunta">
+<p>10. En tu tiempo libre prefieres:</p>
+<input type="radio" name="p10" value="visual"required> Ver videos<br>
+<input type="radio" name="p10" value="auditivo"> Escuchar música<br>
+<input type="radio" name="p10" value="kinestesico"> Hacer actividades físicas<br>
+</div>
+
+<div class="pregunta">
+<p>11. Cuando sigues instrucciones:</p>
+<input type="radio" name="p11" value="visual"required> Lees pasos escritos<br>
+<input type="radio" name="p11" value="auditivo"> Escuchas a alguien explicarlo<br>
+<input type="radio" name="p11" value="kinestesico"> Lo intentas directamente<br>
+</div>
+
+<div class="pregunta">
+<p>12. Te gusta aprender con:</p>
+<input type="radio" name="p12" value="visual"required> Imágenes y gráficos<br>
+<input type="radio" name="p12" value="auditivo"> Explicaciones habladas<br>
+<input type="radio" name="p12" value="kinestesico"> Actividades prácticas<br>
+</div>
+
+<br>
+<!--Al momento de presionarlo se recopilan todas las respuestas y se envian a Flask
+que calcula el tipo de aprendizaje y se muestra el resultado-->
+<input type="submit" value="Enviar">
+
+</form>
+
+</body>
+</html>
