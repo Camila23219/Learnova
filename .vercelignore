@@ -1,0 +1,5 @@
+respuestas.db
+__pycache__/
+*.pyc
+img/
+flask/

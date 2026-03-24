@@ -2,28 +2,46 @@ from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3
 import os
 
-app = Flask(__name__)
+# Rutas absolutas para que Vercel encuentre templates y static
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(__name__,
+    template_folder=os.path.join(BASE_DIR, 'templates'),
+    static_folder=os.path.join(BASE_DIR, 'static')
+)
 app.secret_key = 'learnova_2026_secret'
 
 DASHBOARD_PASSWORD = 'admin123'
 
-# En Vercel el filesystem es de solo lectura, se usa /tmp para la BD
-DB_PATH = '/tmp/respuestas.db' if os.environ.get('VERCEL') else 'respuestas.db'
+# Detectar si el filesystem es escribible; si no, usar /tmp (Vercel)
+def get_db_path():
+    local = os.path.join(BASE_DIR, 'respuestas.db')
+    try:
+        with open(local, 'a'):
+            pass
+        return local
+    except OSError:
+        return '/tmp/respuestas.db'
+
+DB_PATH = get_db_path()
 
 def crear_db():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS respuestas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tema TEXT,
-        p1 TEXT, p2 TEXT, p3 TEXT, p4 TEXT,
-        p5 TEXT, p6 TEXT, p7 TEXT, p8 TEXT,
-        p9 TEXT, p10 TEXT, p11 TEXT, p12 TEXT
-    )
-    """)
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS respuestas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tema TEXT,
+            p1 TEXT, p2 TEXT, p3 TEXT, p4 TEXT,
+            p5 TEXT, p6 TEXT, p7 TEXT, p8 TEXT,
+            p9 TEXT, p10 TEXT, p11 TEXT, p12 TEXT
+        )
+        """)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[DB] Error al inicializar: {e}")
 
 crear_db()
 
@@ -50,14 +68,17 @@ def resultado():
         elif respuesta == "kinestesico":
             kinestesico += 1
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("""
-    INSERT INTO respuestas (tema,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-    """, (tema, *respuestas))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("""
+        INSERT INTO respuestas (tema,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """, (tema, *respuestas))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[DB] Error al guardar: {e}")
 
     if visual > auditivo and visual > kinestesico:
         estilo = "Visual"
@@ -129,39 +150,39 @@ def dashboard():
     if not session.get('dashboard_auth'):
         return redirect(url_for('dashboard_login'))
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
 
-    cursor.execute("SELECT COUNT(*) FROM respuestas")
-    total = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) FROM respuestas")
+        total = cursor.fetchone()[0]
 
-    if total == 0:
+        if total == 0:
+            conn.close()
+            return render_template('dashboard.html', total=0, estilos={}, temas=[], recientes=[])
+
+        cursor.execute("SELECT p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12 FROM respuestas")
+        estilos_count = {'visual': 0, 'auditivo': 0, 'kinestesico': 0}
+        for row in cursor.fetchall():
+            estilos_count[calcular_estilo_fila(row)] += 1
+        estilos = {k: v for k, v in estilos_count.items() if v > 0}
+
+        cursor.execute("SELECT tema, COUNT(*) as cnt FROM respuestas GROUP BY tema ORDER BY cnt DESC LIMIT 5")
+        temas = [{"tema": r[0], "count": r[1]} for r in cursor.fetchall()]
+
+        cursor.execute("SELECT id, tema, p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12 FROM respuestas ORDER BY id DESC LIMIT 5")
+        recientes = []
+        for row in cursor.fetchall():
+            recientes.append({
+                'id': row[0],
+                'tema': row[1],
+                'estilo': calcular_estilo_fila(row[2:])
+            })
+
         conn.close()
+    except Exception as e:
+        print(f"[DB] Error en dashboard: {e}")
         return render_template('dashboard.html', total=0, estilos={}, temas=[], recientes=[])
-
-    # Distribucion de estilos
-    cursor.execute("SELECT p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12 FROM respuestas")
-    estilos_count = {'visual': 0, 'auditivo': 0, 'kinestesico': 0}
-    for row in cursor.fetchall():
-        estilo = calcular_estilo_fila(row)
-        estilos_count[estilo] += 1
-    estilos = {k: v for k, v in estilos_count.items() if v > 0}
-
-    # Top 5 temas
-    cursor.execute("SELECT tema, COUNT(*) as cnt FROM respuestas GROUP BY tema ORDER BY cnt DESC LIMIT 5")
-    temas = [{"tema": r[0], "count": r[1]} for r in cursor.fetchall()]
-
-    # Ultimas 5 respuestas
-    cursor.execute("SELECT id, tema, p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12 FROM respuestas ORDER BY id DESC LIMIT 5")
-    recientes = []
-    for row in cursor.fetchall():
-        recientes.append({
-            'id': row[0],
-            'tema': row[1],
-            'estilo': calcular_estilo_fila(row[2:])
-        })
-
-    conn.close()
 
     return render_template('dashboard.html',
         total=total,
