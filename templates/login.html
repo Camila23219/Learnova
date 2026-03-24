@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso al Dashboard — Learnova</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1A3A5C;
+      --accent: #1E90D6;
+      --highlight: #F5A623;
+      --bg: #F4F8FC;
+      --card: #FFFFFF;
+      --text: #1A3A5C;
+      --text-light: #5A7A99;
+      --border: #D6E8F5;
+      --error: #EF4444;
+      --error-bg: #FEF2F2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 40px rgba(26,58,92,0.12);
+      text-align: center;
+    }
+
+    .logo {
+      width: 80px;
+      margin-bottom: 20px;
+      transition: transform 0.3s;
+    }
+
+    .logo:hover { transform: scale(1.05); }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .subtitulo {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 32px;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .campo input {
+      width: 100%;
+      padding: 13px 44px 13px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .campo input:focus {
+      border-color: var(--accent);
+    }
+
+    .toggle-pass {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--text-light);
+      padding: 0;
+    }
+
+    .error-msg {
+      background: var(--error-bg);
+      color: var(--error);
+      border: 1px solid #FECACA;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .btn-entrar {
+      width: 100%;
+      margin-top: 20px;
+      background: linear-gradient(135deg, var(--highlight), #F5C842);
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(245,166,35,0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-entrar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245,166,35,0.5);
+    }
+
+    .volver {
+      display: block;
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .volver:hover { color: var(--accent); }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 36px 24px; }
+      h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Learnova" class="logo">
+  <h1>Acceso al Dashboard</h1>
+  <p class="subtitulo">Ingresa la clave de administrador para continuar</p>
+
+  {% if error %}
+  <div class="error-msg">🔒 {{ error }}</div>
+  {% endif %}
+
+  <form method="post">
+    <div class="campo">
+      <label for="clave">Clave de acceso</label>
+      <div class="input-wrapper">
+        <input type="password" name="clave" id="clave" placeholder="••••••••" required autofocus>
+        <button type="button" class="toggle-pass" onclick="togglePass()">👁️</button>
+      </div>
+    </div>
+    <button type="submit" class="btn-entrar">Entrar al Dashboard →</button>
+  </form>
+
+  <a href="/" class="volver">← Volver al test</a>
+</div>
+
+<script>
+  function togglePass() {
+    const input = document.getElementById('clave');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+</script>
+
+</body>
+</html>

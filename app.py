@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3
 import pandas as pd
 
 app = Flask(__name__)
+app.secret_key = 'learnova_2026_secret'
+
+DASHBOARD_PASSWORD = 'admin123'
 
 def crear_db():
     conn = sqlite3.connect("respuestas.db")
@@ -95,8 +98,26 @@ def resultado():
         recurso=recurso
     )
 
+@app.route('/dashboard/login', methods=['GET', 'POST'])
+def dashboard_login():
+    error = None
+    if request.method == 'POST':
+        if request.form['clave'] == DASHBOARD_PASSWORD:
+            session['dashboard_auth'] = True
+            return redirect(url_for('dashboard'))
+        else:
+            error = 'Clave incorrecta. Intenta de nuevo.'
+    return render_template('login.html', error=error)
+
+@app.route('/dashboard/logout')
+def dashboard_logout():
+    session.pop('dashboard_auth', None)
+    return redirect(url_for('dashboard_login'))
+
 @app.route('/dashboard')
 def dashboard():
+    if not session.get('dashboard_auth'):
+        return redirect(url_for('dashboard_login'))
     conn = sqlite3.connect("respuestas.db")
     df = pd.read_sql_query("SELECT * FROM respuestas", conn)
     conn.close()
