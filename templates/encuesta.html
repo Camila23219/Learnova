@@ -1,188 +1,646 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
-<!-- Se importo una fuente desde Google para personalizar más la página -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
-<!--Se define la codificación de caracteres para que se acepten acentos y ñ -->
-<meta charset="UTF-8">
-<!-- Este es el titulo -->
-<title>Test de Estilo de Aprendizaje</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test de Estilo de Aprendizaje — Learnova</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1A3A5C;
+      --primary-dark: #0F2240;
+      --primary-light: #E8F4FD;
+      --accent: #1E90D6;
+      --highlight: #F5A623;
+      --bg: #F4F8FC;
+      --card: #FFFFFF;
+      --text: #1A3A5C;
+      --text-light: #5A7A99;
+      --border: #D6E8F5;
+      --shadow: 0 4px 6px -1px rgba(26,58,92,0.08), 0 2px 4px -2px rgba(26,58,92,0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(26,58,92,0.12), 0 4px 6px -4px rgba(26,58,92,0.08);
+    }
 
-<style>
-/*Todo lo que esta dentro de style son cosas que utilizamos para hacer que nuestra página se viera mejor*/
-/*El estilo general esta dentro del body*/
-body{
-font-family: 'Playfair Display', serif; /*Fuente*/
-margin:0; /*Aqui se eliminan margenes*/
-background-color:#e0eba4; /*Color de fondo*/
-}
-/*El estilo del encabezado*/
-header{
-text-align:center; /*Se usa para alinear el texto*/
-padding:20px; /*Espacio interior*/
-}
-/*El estilo del logo*/
-header img{
-margin-bottom:10px; /* Espacio debajo de la imagen */
-transition: transform 0.5s; /*Una pequeña animación al pasar el mouse por el logo*/
-}
-/*Con esto se agranda la imágen cuando pasas el mouse por ella*/
-header img:hover{
-transform: scale(1.05); /*La escala de que tanto crece la imágen*/
-}
-/*Este es el estilo del texto principal*/
-h1{
-text-align:center;
-}
-/*Aqui se ajusta el estilo del formulario, el color de fondo, el tamaño del cuadro, 
-si va centrado, el espacio interno, el estilo de bordes y la sombra*/
-form{
-background:white;
-width:650px;
-margin:auto;
-padding:25px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-/*Modificamos el estilo de cada pregunta para que se viera mejor, añadiendo sombra y bordeando
-un poco los bordes*/
-.pregunta{
-background:#f8f8f8;
-padding:15px;
-margin-bottom:15px;
-border-radius:8px;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-/*Con esto modificamos el botón de "Enviar" cambiando el color de fondo y texto, añadiendo
-sombra, bordeando los borden y centrando el recuadro*/
-input[type="submit"]{
-background:#3768a0;
-color:white;
-border:none;
-padding:12px 25px;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
-display:block;
-margin:auto;
-}
-/*Con esto al pasar el mouse por el boton de "enviar" se oscurece un poco*/
-input[type="submit"]:hover{
-background:#2c5685;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-</style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
+    /* BARRA DE PROGRESO */
+    .progress-bar-container {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--highlight));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #1E90D6 0%, #5BC8F5 100%);
+      color: white;
+      text-align: center;
+      padding: 48px 24px 40px;
+    }
+
+    header img {
+      width: 80px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+      transition: transform 0.3s;
+    }
+
+    header img:hover { transform: scale(1.08); }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    /* CONTENEDOR */
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 32px 16px 64px;
+    }
+
+    /* TEMA */
+    .topic-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .topic-card label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .topic-card input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .topic-card input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+
+    .topic-card input[type="text"]::placeholder { color: #CBD5E1; }
+
+    /* PREGUNTA */
+    .pregunta {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s;
+    }
+
+    .pregunta:hover { box-shadow: var(--shadow-lg); }
+
+    .pregunta-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .pregunta-num {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pregunta p {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .opciones {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .opcion { position: relative; }
+
+    .opcion input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .opcion label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .opcion label:hover {
+      border-color: #93C5FD;
+      background: #F0F9FF;
+    }
+
+    .opcion input[type="radio"]:checked + label {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .opcion input[type="radio"]:checked + label .dot {
+      border-color: var(--primary);
+      background: var(--primary);
+    }
+
+    .opcion input[type="radio"]:checked + label .dot::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    /* BOTON ENVIAR */
+    .submit-area {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--highlight), #F5C842);
+      color: white;
+      border: none;
+      padding: 16px 48px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(245, 166, 35, 0.45);
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 166, 35, 0.55);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .dashboard-link {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .dashboard-link a {
+      color: var(--text-light);
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .dashboard-link a:hover { color: var(--primary); }
+
+    /* TABLET */
+    @media (max-width: 768px) {
+      .container { max-width: 100%; }
+      header { padding: 36px 20px 28px; }
+      header img { width: 64px; }
+      header h1 { font-size: 24px; }
+    }
+
+    /* MOVIL */
+    @media (max-width: 600px) {
+      header { padding: 28px 16px 24px; }
+      header img { width: 56px; margin-bottom: 10px; }
+      header h1 { font-size: 20px; }
+      header p { font-size: 13px; }
+      .progress-bar-container { padding: 10px 14px; }
+      .progress-text { font-size: 12px; }
+      .container { padding: 16px 10px 48px; }
+      .topic-card { padding: 18px; border-radius: 12px; }
+      .topic-card input[type="text"] { font-size: 14px; }
+      .pregunta { padding: 16px; border-radius: 12px; }
+      .pregunta p { font-size: 14px; }
+      .opcion label { padding: 10px 12px; font-size: 13px; }
+      .pregunta-num { width: 24px; height: 24px; font-size: 12px; }
+      .btn-submit { width: 100%; padding: 15px 20px; font-size: 15px; }
+      .dashboard-link { margin-top: 12px; }
+    }
+
+    /* MOVIL PEQUEÑO */
+    @media (max-width: 380px) {
+      header h1 { font-size: 18px; }
+      .pregunta { padding: 14px; }
+      .opcion label { font-size: 12px; padding: 9px 10px; }
+    }
+  </style>
 </head>
-
 <body>
-<!-- Encabezado con el logo -->
-<h1>Test de Estilo de Aprendizaje</h1>
-<!-- Formulario que enviará la información a Flask en la ruta /resultado -->
+
+<!-- BARRA DE PROGRESO -->
+<div class="progress-bar-container">
+  <div class="progress-track">
+    <div class="progress-fill" id="barra"></div>
+  </div>
+  <span class="progress-text" id="contador">0/12 respondidas</span>
+</div>
+
+<!-- HEADER -->
+<header>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Learnova">
+  <h1>Test de Estilo de Aprendizaje</h1>
+  <p>Descubre cómo aprendes mejor y recibe recomendaciones personalizadas</p>
+</header>
+
+<!-- FORMULARIO -->
+<div class="container">
 <form action="/resultado" method="post">
-<!-- Campo para escribir el tema que quiere aprender -->
-<h3>¿Qué tema quieres aprender?</h3>
-<input type="text" name="tema" required>
 
-<hr><!--Linea separadora-->
-<!--Aquí empieza el formulario-->
-<!--El div class es para que cada pregunta este dentro de un bloque separado
-lo que hace que se vea mejor y más organizado-->
-<div class="pregunta">
-<p>1. Cuando aprendes algo nuevo prefieres:</p>
-<!--En cada pregunta se usa <input type="radio"> que significa opción única
-name hace que solo una opción puede seleccionarse
-y value le asigna un valor, que será recibido en el otro documento
-y el required hace que si el usuario no respondió una pregunta no lo dejará avanzar
-y aparecerá un mensaje señalando la pregunta que no contesto-->
-<input type="radio" name="p1" value="visual" required> Ver imágenes<br>
-<input type="radio" name="p1" value="auditivo"> Escuchar explicación<br>
-<input type="radio" name="p1" value="kinestesico"> Practicar<br>
-</div>
+  <!-- TEMA -->
+  <div class="topic-card">
+    <label for="tema">¿Qué tema quieres aprender?</label>
+    <input type="text" name="tema" id="tema" placeholder="Ej: Matemáticas, Programación, Historia..." required>
+  </div>
 
-<div class="pregunta">
-<p>2. En clase recuerdas mejor:</p>
-<input type="radio" name="p2" value="visual"required> Lo que ves en el pizarrón<br>
-<input type="radio" name="p2" value="auditivo"> Lo que dice el profesor<br>
-<input type="radio" name="p2" value="kinestesico"> Las actividades que hiciste<br>
-</div>
+  <!-- P1 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">1</div>
+      <p>Cuando aprendes algo nuevo, prefieres:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p1" id="p1v" value="visual" required>
+        <label for="p1v"><span class="dot"></span> 👁️ Ver imágenes o diagramas</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p1" id="p1a" value="auditivo">
+        <label for="p1a"><span class="dot"></span> 👂 Escuchar una explicación</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p1" id="p1k" value="kinestesico">
+        <label for="p1k"><span class="dot"></span> ✋ Practicar directamente</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>3. Cuando estudias usas más:</p>
-<input type="radio" name="p3" value="visual"required> Mapas mentales o dibujos<br>
-<input type="radio" name="p3" value="auditivo"> Leer en voz alta<br>
-<input type="radio" name="p3" value="kinestesico"> Practicar ejercicios<br>
-</div>
+  <!-- P2 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">2</div>
+      <p>En clase, recuerdas mejor:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p2" id="p2v" value="visual" required>
+        <label for="p2v"><span class="dot"></span> 👁️ Lo que ves en el pizarrón</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p2" id="p2a" value="auditivo">
+        <label for="p2a"><span class="dot"></span> 👂 Lo que dice el profesor</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p2" id="p2k" value="kinestesico">
+        <label for="p2k"><span class="dot"></span> ✋ Las actividades que hiciste</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>4. Prefieres aprender con:</p>
-<input type="radio" name="p4" value="visual" required> Videos<br>
-<input type="radio" name="p4" value="auditivo"> Podcasts o explicaciones<br>
-<input type="radio" name="p4" value="kinestesico"> Experimentos<br>
-</div>
+  <!-- P3 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">3</div>
+      <p>Cuando estudias, usas más:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p3" id="p3v" value="visual" required>
+        <label for="p3v"><span class="dot"></span> 👁️ Mapas mentales o dibujos</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p3" id="p3a" value="auditivo">
+        <label for="p3a"><span class="dot"></span> 👂 Leer en voz alta</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p3" id="p3k" value="kinestesico">
+        <label for="p3k"><span class="dot"></span> ✋ Practicar ejercicios</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>5. Cuando recuerdas algo piensas en:</p>
-<input type="radio" name="p5" value="visual" required> Imágenes<br>
-<input type="radio" name="p5" value="auditivo"> Sonidos o palabras<br>
-<input type="radio" name="p5" value="auditivo"> Acciones<br>
-</div>
-<div class="pregunta">
-<p>6. En una explicación prefieres:</p>
-<input type="radio" name="p6" value="visual"required> Diagramas<br>
-<input type="radio" name="p6" value="auditivo"> Escuchar la explicación<br>
-<input type="radio" name="p6" value="kinestesico"> Participar<br>
-</div>
+  <!-- P4 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">4</div>
+      <p>Prefieres aprender con:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p4" id="p4v" value="visual" required>
+        <label for="p4v"><span class="dot"></span> 👁️ Videos</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p4" id="p4a" value="auditivo">
+        <label for="p4a"><span class="dot"></span> 👂 Podcasts o explicaciones</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p4" id="p4k" value="kinestesico">
+        <label for="p4k"><span class="dot"></span> ✋ Experimentos</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>7. Cuando usas internet prefieres:</p>
-<input type="radio" name="p7" value="visual"required> Ver infografías<br>
-<input type="radio" name="p7" value="auditivo"> Escuchar videos explicativos<br>
-<input type="radio" name="p7" value="kinestesico"> Hacer actividades<br>
-</div>
+  <!-- P5 (bug corregido: "Acciones" era auditivo, ahora es kinestesico) -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">5</div>
+      <p>Cuando recuerdas algo, piensas en:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p5" id="p5v" value="visual" required>
+        <label for="p5v"><span class="dot"></span> 👁️ Imágenes</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p5" id="p5a" value="auditivo">
+        <label for="p5a"><span class="dot"></span> 👂 Sonidos o palabras</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p5" id="p5k" value="kinestesico">
+        <label for="p5k"><span class="dot"></span> ✋ Acciones</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>8. Aprendes mejor cuando:</p>
-<input type="radio" name="p8" value="visual"required> Ves ejemplos<br>
-<input type="radio" name="p8" value="auditivo"> Escuchas instrucciones<br>
-<input type="radio" name="p8" value="kinestesico"> Practicas<br>
-</div>
+  <!-- P6 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">6</div>
+      <p>En una explicación, prefieres:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p6" id="p6v" value="visual" required>
+        <label for="p6v"><span class="dot"></span> 👁️ Diagramas</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p6" id="p6a" value="auditivo">
+        <label for="p6a"><span class="dot"></span> 👂 Escuchar la explicación</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p6" id="p6k" value="kinestesico">
+        <label for="p6k"><span class="dot"></span> ✋ Participar activamente</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>9. Cuando explicas algo usas:</p>
-<input type="radio" name="p9" value="visual"required> Dibujos<br>
-<input type="radio" name="p9" value="auditivo"> Palabras<br>
-<input type="radio" name="p9" value="kinestesico"> Demostraciones<br>
-</div>
+  <!-- P7 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">7</div>
+      <p>Cuando usas internet para aprender, prefieres:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p7" id="p7v" value="visual" required>
+        <label for="p7v"><span class="dot"></span> 👁️ Ver infografías</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p7" id="p7a" value="auditivo">
+        <label for="p7a"><span class="dot"></span> 👂 Escuchar videos explicativos</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p7" id="p7k" value="kinestesico">
+        <label for="p7k"><span class="dot"></span> ✋ Hacer actividades interactivas</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>10. En tu tiempo libre prefieres:</p>
-<input type="radio" name="p10" value="visual"required> Ver videos<br>
-<input type="radio" name="p10" value="auditivo"> Escuchar música<br>
-<input type="radio" name="p10" value="kinestesico"> Hacer actividades físicas<br>
-</div>
+  <!-- P8 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">8</div>
+      <p>Aprendes mejor cuando:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p8" id="p8v" value="visual" required>
+        <label for="p8v"><span class="dot"></span> 👁️ Ves ejemplos</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p8" id="p8a" value="auditivo">
+        <label for="p8a"><span class="dot"></span> 👂 Escuchas instrucciones</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p8" id="p8k" value="kinestesico">
+        <label for="p8k"><span class="dot"></span> ✋ Practicas tú mismo</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>11. Cuando sigues instrucciones:</p>
-<input type="radio" name="p11" value="visual"required> Lees pasos escritos<br>
-<input type="radio" name="p11" value="auditivo"> Escuchas a alguien explicarlo<br>
-<input type="radio" name="p11" value="kinestesico"> Lo intentas directamente<br>
-</div>
+  <!-- P9 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">9</div>
+      <p>Cuando explicas algo a otros, usas:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p9" id="p9v" value="visual" required>
+        <label for="p9v"><span class="dot"></span> 👁️ Dibujos o esquemas</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p9" id="p9a" value="auditivo">
+        <label for="p9a"><span class="dot"></span> 👂 Palabras y explicación hablada</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p9" id="p9k" value="kinestesico">
+        <label for="p9k"><span class="dot"></span> ✋ Demostraciones prácticas</label>
+      </div>
+    </div>
+  </div>
 
-<div class="pregunta">
-<p>12. Te gusta aprender con:</p>
-<input type="radio" name="p12" value="visual"required> Imágenes y gráficos<br>
-<input type="radio" name="p12" value="auditivo"> Explicaciones habladas<br>
-<input type="radio" name="p12" value="kinestesico"> Actividades prácticas<br>
-</div>
+  <!-- P10 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">10</div>
+      <p>En tu tiempo libre, prefieres:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p10" id="p10v" value="visual" required>
+        <label for="p10v"><span class="dot"></span> 👁️ Ver videos o películas</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p10" id="p10a" value="auditivo">
+        <label for="p10a"><span class="dot"></span> 👂 Escuchar música o podcasts</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p10" id="p10k" value="kinestesico">
+        <label for="p10k"><span class="dot"></span> ✋ Hacer actividades físicas</label>
+      </div>
+    </div>
+  </div>
 
-<br>
-<!--Al momento de presionarlo se recopilan todas las respuestas y se envian a Flask
-que calcula el tipo de aprendizaje y se muestra el resultado-->
-<input type="submit" value="Enviar">
+  <!-- P11 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">11</div>
+      <p>Cuando sigues instrucciones nuevas:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p11" id="p11v" value="visual" required>
+        <label for="p11v"><span class="dot"></span> 👁️ Lees los pasos escritos</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p11" id="p11a" value="auditivo">
+        <label for="p11a"><span class="dot"></span> 👂 Escuchas a alguien explicarlo</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p11" id="p11k" value="kinestesico">
+        <label for="p11k"><span class="dot"></span> ✋ Lo intentas directamente</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- P12 -->
+  <div class="pregunta">
+    <div class="pregunta-header">
+      <div class="pregunta-num">12</div>
+      <p>Te gusta aprender con:</p>
+    </div>
+    <div class="opciones">
+      <div class="opcion">
+        <input type="radio" name="p12" id="p12v" value="visual" required>
+        <label for="p12v"><span class="dot"></span> 👁️ Imágenes y gráficos</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p12" id="p12a" value="auditivo">
+        <label for="p12a"><span class="dot"></span> 👂 Explicaciones habladas</label>
+      </div>
+      <div class="opcion">
+        <input type="radio" name="p12" id="p12k" value="kinestesico">
+        <label for="p12k"><span class="dot"></span> ✋ Actividades prácticas</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENVIAR -->
+  <div class="submit-area">
+    <button type="submit" class="btn-submit">Descubrir mi estilo de aprendizaje →</button>
+  </div>
+
+  <div class="dashboard-link">
+    <a href="/dashboard">Ver estadísticas del dashboard 📊</a>
+  </div>
 
 </form>
+</div>
+
+<script>
+  const grupos = ['p1','p2','p3','p4','p5','p6','p7','p8','p9','p10','p11','p12'];
+
+  function actualizarProgreso() {
+    let respondidas = 0;
+    grupos.forEach(nombre => {
+      if (document.querySelector(`input[name="${nombre}"]:checked`)) {
+        respondidas++;
+      }
+    });
+    const pct = Math.round((respondidas / 12) * 100);
+    document.getElementById('barra').style.width = pct + '%';
+    document.getElementById('contador').textContent = `${respondidas}/12 respondidas`;
+  }
+
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', actualizarProgreso);
+  });
+</script>
 
 </body>
 </html>

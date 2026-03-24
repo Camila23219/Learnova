@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu Resultado — Learnova</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1A3A5C;
+      --primary-light: #E8F4FD;
+      --accent: #1E90D6;
+      --highlight: #F5A623;
+      --bg: #F4F8FC;
+      --card: #FFFFFF;
+      --text: #1A3A5C;
+      --text-light: #5A7A99;
+      --border: #D6E8F5;
+      --shadow: 0 4px 6px -1px rgba(26,58,92,0.08);
+      --shadow-lg: 0 10px 15px -3px rgba(26,58,92,0.12);
+
+      {% if estilo == "Visual" %}
+      --style-color: #8B5CF6;
+      --style-bg: #F5F3FF;
+      --style-shadow: rgba(139, 92, 246, 0.3);
+      {% elif estilo == "Auditivo" %}
+      --style-color: #0EA5E9;
+      --style-bg: #F0F9FF;
+      --style-shadow: rgba(14, 165, 233, 0.3);
+      {% else %}
+      --style-color: #10B981;
+      --style-bg: #ECFDF5;
+      --style-shadow: rgba(16, 185, 129, 0.3);
+      {% endif %}
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1E90D6 0%, #5BC8F5 100%);
+      color: white;
+      text-align: center;
+      padding: 28px 24px;
+    }
+
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 32px 16px 64px;
+    }
+
+    /* RESULTADO HERO */
+    .resultado-hero {
+      background: var(--style-bg);
+      border: 2px solid var(--style-color);
+      border-radius: 20px;
+      padding: 40px 32px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .resultado-icono {
+      font-size: 64px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .tema-tag {
+      background: rgba(0,0,0,0.06);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-light);
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .resultado-hero h2 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .estilo-nombre {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--style-color);
+    }
+
+    /* BARRAS DE PUNTUACION */
+    .scores-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .scores-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .score-label {
+      width: 120px;
+      font-size: 14px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .score-track {
+      flex: 1;
+      height: 10px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0;
+      transition: width 1s ease;
+    }
+
+    .score-fill.visual    { background: #8B5CF6; }
+    .score-fill.auditivo  { background: #0EA5E9; }
+    .score-fill.kines     { background: #10B981; }
+
+    .score-num {
+      width: 36px;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    /* METODOS */
+    .metodos-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .metodos-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .metodos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metodo-item {
+      background: var(--style-bg);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .metodo-icono { font-size: 22px; flex-shrink: 0; }
+
+    .metodo-titulo {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .metodo-desc {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* BOTONES */
+    .botones {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      display: block;
+      background: var(--style-color);
+      color: white;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px var(--style-shadow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--style-shadow);
+    }
+
+    .btn-secondary {
+      display: block;
+      background: var(--card);
+      color: var(--accent);
+      border: 2px solid var(--border);
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      background: var(--primary-light);
+    }
+
+    .btn-dashboard {
+      display: block;
+      text-align: center;
+      color: var(--text-light);
+      font-size: 13px;
+      text-decoration: none;
+      padding: 10px;
+      transition: color 0.2s;
+    }
+
+    .btn-dashboard:hover { color: var(--primary); }
+
+    /* TABLET */
+    @media (max-width: 768px) {
+      .container { max-width: 100%; }
+      header { padding: 22px 20px; }
+    }
+
+    /* MOVIL */
+    @media (max-width: 600px) {
+      header h1 { font-size: 17px; }
+      .container { padding: 20px 10px 48px; }
+      .resultado-hero { padding: 28px 18px; border-radius: 14px; }
+      .resultado-icono { font-size: 52px; }
+      .estilo-nombre { font-size: 30px; }
+      .scores-card, .metodos-card { padding: 18px; border-radius: 12px; }
+      .score-label { width: 100px; font-size: 13px; }
+      .metodos-grid { grid-template-columns: 1fr; }
+      .metodo-item { padding: 14px; }
+      .btn-primary, .btn-secondary { padding: 14px; font-size: 14px; }
+    }
+
+    /* MOVIL PEQUEÑO */
+    @media (max-width: 380px) {
+      .estilo-nombre { font-size: 26px; }
+      .resultado-icono { font-size: 44px; }
+      .score-label { width: 90px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎓 Tu Resultado de Aprendizaje</h1>
+</header>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="resultado-hero">
+    <span class="resultado-icono">{{ icono }}</span>
+    <div class="tema-tag">Tema: {{ tema }}</div>
+    <h2>Tu estilo de aprendizaje es</h2>
+    <div class="estilo-nombre">{{ estilo }}</div>
+  </div>
+
+  <!-- PUNTAJES -->
+  <div class="scores-card">
+    <h3>Distribución de tus respuestas</h3>
+
+    <div class="score-row">
+      <span class="score-label">👁️ Visual</span>
+      <div class="score-track">
+        <div class="score-fill visual" data-width="{{ (visual / 12 * 100) | int }}"></div>
+      </div>
+      <span class="score-num">{{ visual }}/12</span>
+    </div>
+
+    <div class="score-row">
+      <span class="score-label">👂 Auditivo</span>
+      <div class="score-track">
+        <div class="score-fill auditivo" data-width="{{ (auditivo / 12 * 100) | int }}"></div>
+      </div>
+      <span class="score-num">{{ auditivo }}/12</span>
+    </div>
+
+    <div class="score-row">
+      <span class="score-label">✋ Kinestésico</span>
+      <div class="score-track">
+        <div class="score-fill kines" data-width="{{ (kinestesico / 12 * 100) | int }}"></div>
+      </div>
+      <span class="score-num">{{ kinestesico }}/12</span>
+    </div>
+  </div>
+
+  <!-- METODOS -->
+  <div class="metodos-card">
+    <h3>Métodos de estudio recomendados</h3>
+    <div class="metodos-grid">
+      {% for emoji, titulo, desc in metodos %}
+      <div class="metodo-item">
+        <span class="metodo-icono">{{ emoji }}</span>
+        <div>
+          <div class="metodo-titulo">{{ titulo }}</div>
+          <div class="metodo-desc">{{ desc }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- BOTONES -->
+  <div class="botones">
+    <a href="{{ recurso }}" target="_blank" class="btn-primary">
+      🔍 Buscar recursos para aprender {{ tema }}
+    </a>
+    <a href="/" class="btn-secondary">↩️ Volver a hacer el test</a>
+    <a href="/dashboard" class="btn-dashboard">Ver estadísticas del dashboard 📊</a>
+  </div>
+
+</div>
+
+<script>
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.score-fill').forEach(bar => {
+      const w = bar.getAttribute('data-width');
+      setTimeout(() => { bar.style.width = w + '%'; }, 300);
+    });
+  });
+</script>
+
+</body>
+</html>
