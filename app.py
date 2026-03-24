@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3
 import pandas as pd
+import os
 
 app = Flask(__name__)
 app.secret_key = 'learnova_2026_secret'
 
 DASHBOARD_PASSWORD = 'admin123'
 
+# En Vercel el filesystem es de solo lectura, se usa /tmp para la BD
+DB_PATH = '/tmp/respuestas.db' if os.environ.get('VERCEL') else 'respuestas.db'
+
 def crear_db():
-    conn = sqlite3.connect("respuestas.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS respuestas (
@@ -47,7 +51,7 @@ def resultado():
         elif respuesta == "kinestesico":
             kinestesico += 1
 
-    conn = sqlite3.connect("respuestas.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
     INSERT INTO respuestas (tema,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12)
@@ -118,7 +122,7 @@ def dashboard_logout():
 def dashboard():
     if not session.get('dashboard_auth'):
         return redirect(url_for('dashboard_login'))
-    conn = sqlite3.connect("respuestas.db")
+    conn = sqlite3.connect(DB_PATH)
     df = pd.read_sql_query("SELECT * FROM respuestas", conn)
     conn.close()
 
@@ -147,4 +151,5 @@ def dashboard():
         recientes=recientes
     )
 
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
