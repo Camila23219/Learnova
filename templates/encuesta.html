@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -317,6 +317,41 @@
       .pregunta { padding: 14px; }
       .opcion label { font-size: 12px; padding: 9px 10px; }
     }
+
+    /* DARK MODE */
+    [data-theme="dark"] {
+      --primary: #4FA8E8;
+      --primary-dark: #2A7AC5;
+      --primary-light: #1A2F45;
+      --accent: #4FA8E8;
+      --highlight: #F5A623;
+      --bg: #0F1923;
+      --card: #1A2535;
+      --text: #E2EEF9;
+      --text-light: #8BADC4;
+      --border: #2A3F5A;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -2px rgba(0,0,0,0.2);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4);
+    }
+    [data-theme="dark"] .progress-bar-container { background: #1A2535; }
+    [data-theme="dark"] .opcion label:hover { background: #1E3448; border-color: #4FA8E8; }
+
+    /* DARK TOGGLE */
+    .dark-toggle {
+      background: rgba(255,255,255,0.15); border: none;
+      padding: 6px 10px; border-radius: 8px;
+      cursor: pointer; font-size: 16px; transition: background 0.2s;
+    }
+    .dark-toggle:hover { background: rgba(255,255,255,0.25); }
+    header .header-top {
+      display: flex; align-items: center;
+      justify-content: space-between; width: 100%; max-width: 700px; margin: 0 auto 16px;
+    }
+    header .back-link {
+      color: rgba(255,255,255,0.75); font-size: 13px; text-decoration: none;
+      transition: color 0.2s;
+    }
+    header .back-link:hover { color: white; }
   </style>
 </head>
 <body>
@@ -331,6 +366,10 @@
 
 <!-- HEADER -->
 <header>
+  <div class="header-top">
+    <a href="/" class="back-link">← Inicio</a>
+    <button class="dark-toggle" id="darkToggle">🌙</button>
+  </div>
   <img src="{{ url_for('static', filename='logo.png') }}" alt="Learnova">
   <h1>Test de Estilo de Aprendizaje</h1>
   <p>Descubre cómo aprendes mejor y recibe recomendaciones personalizadas</p>
@@ -623,22 +662,46 @@
 </div>
 
 <script>
+  // Barra de progreso
   const grupos = ['p1','p2','p3','p4','p5','p6','p7','p8','p9','p10','p11','p12'];
-
   function actualizarProgreso() {
     let respondidas = 0;
     grupos.forEach(nombre => {
-      if (document.querySelector(`input[name="${nombre}"]:checked`)) {
-        respondidas++;
-      }
+      if (document.querySelector(`input[name="${nombre}"]:checked`)) respondidas++;
     });
     const pct = Math.round((respondidas / 12) * 100);
     document.getElementById('barra').style.width = pct + '%';
     document.getElementById('contador').textContent = `${respondidas}/12 respondidas`;
   }
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', actualizarProgreso));
 
-  document.querySelectorAll('input[type="radio"]').forEach(radio => {
-    radio.addEventListener('change', actualizarProgreso);
+  // Dark mode
+  const html = document.documentElement;
+  const toggle = document.getElementById('darkToggle');
+  const savedDark = localStorage.getItem('learnova-dark') === '1';
+  html.setAttribute('data-theme', savedDark ? 'dark' : 'light');
+  toggle.textContent = savedDark ? '☀️' : '🌙';
+  toggle.addEventListener('click', () => {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('learnova-dark', isDark ? '0' : '1');
+    toggle.textContent = isDark ? '🌙' : '☀️';
+  });
+
+  // Scroll fade-in en preguntas
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.pregunta').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    obs.observe(el);
   });
 </script>
 

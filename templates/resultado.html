@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -209,30 +209,120 @@
       color: var(--text-light);
     }
 
-    /* BOTONES */
-    .botones {
+    /* PLAN DE ESTUDIO */
+    .plan-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .plan-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .plan-steps {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
 
-    .btn-primary {
-      display: block;
-      background: var(--style-color);
-      color: white;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
-      transition: all 0.2s;
-      box-shadow: 0 4px 14px var(--style-shadow);
+    .plan-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--style-shadow);
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--style-color);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      padding-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* RECURSOS POR PLATAFORMA */
+    .recursos-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .recursos-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .recursos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .recurso-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 10px;
+      border-radius: 12px;
+      text-decoration: none;
+      border: 2px solid var(--border);
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .recurso-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .recurso-icono {
+      font-size: 24px;
+    }
+
+    .recurso-nombre {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .recurso-desc {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    /* BOTONES */
+    .botones {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .btn-secondary {
@@ -270,6 +360,7 @@
     @media (max-width: 768px) {
       .container { max-width: 100%; }
       header { padding: 22px 20px; }
+      .recursos-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* MOVIL */
@@ -279,11 +370,15 @@
       .resultado-hero { padding: 28px 18px; border-radius: 14px; }
       .resultado-icono { font-size: 52px; }
       .estilo-nombre { font-size: 30px; }
-      .scores-card, .metodos-card { padding: 18px; border-radius: 12px; }
+      .scores-card, .metodos-card, .plan-card, .historial-card { padding: 18px; border-radius: 12px; }
       .score-label { width: 100px; font-size: 13px; }
       .metodos-grid { grid-template-columns: 1fr; }
       .metodo-item { padding: 14px; }
-      .btn-primary, .btn-secondary { padding: 14px; font-size: 14px; }
+      .btn-secondary { padding: 14px; font-size: 14px; }
+      .btn-share { font-size: 14px; padding: 13px; }
+      .historial-item { font-size: 13px; gap: 8px; }
+      .recursos-grid { grid-template-columns: 1fr; }
+      .recurso-btn { flex-direction: row; justify-content: flex-start; text-align: left; padding: 12px 16px; gap: 12px; }
     }
 
     /* MOVIL PEQUEÑO */
@@ -291,13 +386,68 @@
       .estilo-nombre { font-size: 26px; }
       .resultado-icono { font-size: 44px; }
       .score-label { width: 90px; font-size: 12px; }
+      .btn-share { font-size: 13px; }
+      .hist-fecha { display: none; }
     }
+
+    /* DARK MODE */
+    [data-theme="dark"] {
+      --primary: #4FA8E8; --primary-light: #1A2F45;
+      --accent: #4FA8E8; --bg: #0F1923; --card: #1A2535;
+      --text: #E2EEF9; --text-light: #8BADC4; --border: #2A3F5A;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4);
+    }
+    [data-theme="dark"] .recurso-btn { border-color: #2A3F5A !important; background: #1A2535 !important; }
+    [data-theme="dark"] .recurso-nombre { color: inherit !important; }
+
+    /* BOTON COMPARTIR */
+    .btn-share {
+      display: block; width: 100%;
+      background: linear-gradient(135deg, var(--highlight, #F5A623), #F5C842);
+      color: white; border: none; padding: 15px;
+      border-radius: 12px; font-size: 15px; font-weight: 700;
+      font-family: inherit; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(245,166,35,0.4);
+      transition: all 0.2s;
+    }
+    .btn-share:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.5); }
+
+    /* HISTORIAL */
+    .historial-card {
+      background: var(--card); border-radius: 16px;
+      padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow);
+    }
+    .historial-card h3 {
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 14px;
+    }
+    .historial-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px;
+    }
+    .historial-item:last-child { border-bottom: none; }
+    .hist-tema { flex: 1; font-weight: 500; }
+    .hist-estilo { font-size: 12px; color: var(--text-light); }
+    .hist-fecha { font-size: 11px; color: var(--text-light); white-space: nowrap; }
+
+    /* DARK TOGGLE en header */
+    header { position: relative; }
+    .dark-toggle {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(255,255,255,0.15); border: none;
+      padding: 6px 10px; border-radius: 8px;
+      cursor: pointer; font-size: 16px; transition: background 0.2s;
+    }
+    .dark-toggle:hover { background: rgba(255,255,255,0.25); }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
 <header>
   <h1>🎓 Tu Resultado de Aprendizaje</h1>
+  <button class="dark-toggle" id="darkToggle">🌙</button>
 </header>
 
 <div class="container">
@@ -355,24 +505,114 @@
     </div>
   </div>
 
+  <!-- PLAN DE ESTUDIO -->
+  <div class="plan-card">
+    <h3>📋 Tu plan de estudio para {{ tema }}</h3>
+    <div class="plan-steps">
+      {% for paso in plan %}
+      <div class="plan-step">
+        <div class="step-num">{{ loop.index }}</div>
+        <div class="step-text">{{ paso }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- RECURSOS POR PLATAFORMA -->
+  <div class="recursos-card">
+    <h3>🔍 Buscar en plataformas</h3>
+    <div class="recursos-grid">
+      {% for r in recursos %}
+      <a href="{{ r.url }}" target="_blank" class="recurso-btn"
+         style="border-color: {{ r.color }}20; background: {{ r.color }}08;">
+        <span class="recurso-icono">{{ r.icono }}</span>
+        <span class="recurso-nombre" style="color: {{ r.color }};">{{ r.nombre }}</span>
+        <span class="recurso-desc">{{ r.desc }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- HISTORIAL PERSONAL -->
+  <div class="historial-card" id="historialCard" style="display:none">
+    <h3>🕓 Tus resultados anteriores</h3>
+    <div id="historialLista"></div>
+  </div>
+
   <!-- BOTONES -->
   <div class="botones">
-    <a href="{{ recurso }}" target="_blank" class="btn-primary">
-      🔍 Buscar recursos para aprender {{ tema }}
-    </a>
-    <a href="/" class="btn-secondary">↩️ Volver a hacer el test</a>
+    <button class="btn-share" id="shareBtn" onclick="compartir()">📤 Compartir mi resultado</button>
+    <a href="/encuesta" class="btn-secondary">↩️ Volver a hacer el test</a>
     <a href="/dashboard" class="btn-dashboard">Ver estadísticas del dashboard 📊</a>
   </div>
 
 </div>
 
 <script>
+  // Barras animadas
   window.addEventListener('load', () => {
     document.querySelectorAll('.score-fill').forEach(bar => {
       const w = bar.getAttribute('data-width');
       setTimeout(() => { bar.style.width = w + '%'; }, 300);
     });
   });
+
+  // Confetti al cargar
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 },
+        colors: ['#1E90D6','#F5A623','#A8D400','#8B5CF6','#10B981'] });
+    }, 400);
+  });
+
+  // Dark mode
+  const html = document.documentElement;
+  const toggle = document.getElementById('darkToggle');
+  const savedDark = localStorage.getItem('learnova-dark') === '1';
+  html.setAttribute('data-theme', savedDark ? 'dark' : 'light');
+  toggle.textContent = savedDark ? '☀️' : '🌙';
+  toggle.addEventListener('click', () => {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('learnova-dark', isDark ? '0' : '1');
+    toggle.textContent = isDark ? '🌙' : '☀️';
+  });
+
+  // Guardar en historial localStorage
+  const historial = JSON.parse(localStorage.getItem('learnova-historial') || '[]');
+  const nuevo = { fecha: new Date().toLocaleDateString('es-MX'), tema: '{{ tema }}', estilo: '{{ estilo }}', icono: '{{ icono }}' };
+  if (!historial.length || historial[0].tema !== nuevo.tema || historial[0].estilo !== nuevo.estilo) {
+    historial.unshift(nuevo);
+    if (historial.length > 4) historial.pop();
+    localStorage.setItem('learnova-historial', JSON.stringify(historial));
+  }
+
+  // Mostrar historial previo
+  const previos = historial.slice(1);
+  if (previos.length > 0) {
+    document.getElementById('historialCard').style.display = 'block';
+    document.getElementById('historialLista').innerHTML = previos.map(r => `
+      <div class="historial-item">
+        <span>${r.icono}</span>
+        <span class="hist-tema">${r.tema}</span>
+        <span class="hist-estilo">${r.estilo}</span>
+        <span class="hist-fecha">${r.fecha}</span>
+      </div>`).join('');
+  }
+
+  // Compartir
+  function compartir() {
+    const texto = `¡Descubrí que soy aprendiz {{ estilo }} aprendiendo sobre {{ tema }} con Learnova! {{ icono }}\nDescubre tu estilo en: https://learnova-lemon-alpha.vercel.app`;
+    const btn = document.getElementById('shareBtn');
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(texto).then(() => {
+        btn.textContent = '✅ ¡Copiado! Pégalo en WhatsApp o Instagram';
+        setTimeout(() => { btn.textContent = '📤 Compartir mi resultado'; }, 3000);
+      });
+    } else {
+      prompt('Copia este texto:', texto);
+    }
+  }
 </script>
 
 </body>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -152,15 +152,40 @@
 
     .volver:hover { color: var(--accent); }
 
+    /* DARK MODE */
+    [data-theme="dark"] {
+      --bg: #0F1923; --card: #1A2535; --text: #E2EEF9;
+      --text-light: #8BADC4; --border: #2A3F5A;
+      --error: #F87171; --error-bg: #2D1A1A;
+    }
+    [data-theme="dark"] .campo input { background: #0F1923; color: #E2EEF9; }
+
+    /* DARK TOGGLE */
+    .dark-toggle {
+      position: absolute; top: 16px; right: 16px;
+      background: var(--border); border: none; padding: 6px 10px;
+      border-radius: 8px; cursor: pointer; font-size: 15px; transition: background 0.2s;
+    }
+
+    @media (max-width: 768px) {
+      .login-card { padding: 40px 28px; }
+    }
+
     @media (max-width: 480px) {
-      .login-card { padding: 36px 24px; }
-      h1 { font-size: 20px; }
+      .login-card { padding: 32px 20px; }
+      h1 { font-size: 19px; }
+    }
+
+    @media (max-width: 380px) {
+      .login-card { padding: 24px 16px; }
+      h1 { font-size: 17px; }
     }
   </style>
 </head>
 <body>
 
-<div class="login-card">
+<div class="login-card" style="position:relative;">
+  <button class="dark-toggle" id="darkToggle">🌙</button>
   <img src="{{ url_for('static', filename='logo.png') }}" alt="Learnova" class="logo">
   <h1>Acceso al Dashboard</h1>
   <p class="subtitulo">Ingresa la clave de administrador para continuar</p>
@@ -180,7 +205,7 @@
     <button type="submit" class="btn-entrar">Entrar al Dashboard →</button>
   </form>
 
-  <a href="/" class="volver">← Volver al test</a>
+  <a href="/encuesta" class="volver">← Volver al test</a>
 </div>
 
 <script>
@@ -188,6 +213,17 @@
     const input = document.getElementById('clave');
     input.type = input.type === 'password' ? 'text' : 'password';
   }
+  const html = document.documentElement;
+  const toggle = document.getElementById('darkToggle');
+  const savedDark = localStorage.getItem('learnova-dark') === '1';
+  html.setAttribute('data-theme', savedDark ? 'dark' : 'light');
+  toggle.textContent = savedDark ? '☀️' : '🌙';
+  toggle.addEventListener('click', () => {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('learnova-dark', isDark ? '0' : '1');
+    toggle.textContent = isDark ? '🌙' : '☀️';
+  });
 </script>
 
 </body>
