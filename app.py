@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3
-import pandas as pd
 import os
 
 app = Flask(__name__)
@@ -118,31 +117,51 @@ def dashboard_logout():
     session.pop('dashboard_auth', None)
     return redirect(url_for('dashboard_login'))
 
+def calcular_estilo_fila(valores):
+    conteo = {'visual': 0, 'auditivo': 0, 'kinestesico': 0}
+    for v in valores:
+        if v in conteo:
+            conteo[v] += 1
+    return max(conteo, key=conteo.get)
+
 @app.route('/dashboard')
 def dashboard():
     if not session.get('dashboard_auth'):
         return redirect(url_for('dashboard_login'))
-    conn = sqlite3.connect(DB_PATH)
-    df = pd.read_sql_query("SELECT * FROM respuestas", conn)
-    conn.close()
 
-    total = len(df)
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM respuestas")
+    total = cursor.fetchone()[0]
 
     if total == 0:
+        conn.close()
         return render_template('dashboard.html', total=0, estilos={}, temas=[], recientes=[])
 
-    cols = [f'p{i}' for i in range(1, 13)]
+    # Distribucion de estilos
+    cursor.execute("SELECT p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12 FROM respuestas")
+    estilos_count = {'visual': 0, 'auditivo': 0, 'kinestesico': 0}
+    for row in cursor.fetchall():
+        estilo = calcular_estilo_fila(row)
+        estilos_count[estilo] += 1
+    estilos = {k: v for k, v in estilos_count.items() if v > 0}
 
-    def calcular_estilo(row):
-        conteo = row[cols].value_counts()
-        return conteo.idxmax()
+    # Top 5 temas
+    cursor.execute("SELECT tema, COUNT(*) as cnt FROM respuestas GROUP BY tema ORDER BY cnt DESC LIMIT 5")
+    temas = [{"tema": r[0], "count": r[1]} for r in cursor.fetchall()]
 
-    df['estilo'] = df.apply(calcular_estilo, axis=1)
+    # Ultimas 5 respuestas
+    cursor.execute("SELECT id, tema, p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12 FROM respuestas ORDER BY id DESC LIMIT 5")
+    recientes = []
+    for row in cursor.fetchall():
+        recientes.append({
+            'id': row[0],
+            'tema': row[1],
+            'estilo': calcular_estilo_fila(row[2:])
+        })
 
-    estilos = df['estilo'].value_counts().to_dict()
-    temas_top = df['tema'].value_counts().head(5)
-    temas = [{"tema": t, "count": int(c)} for t, c in temas_top.items()]
-    recientes = df.tail(5)[['id', 'tema', 'estilo']].iloc[::-1].to_dict('records')
+    conn.close()
 
     return render_template('dashboard.html',
         total=total,
