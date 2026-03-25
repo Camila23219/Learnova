@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, session, redirect, url_for, Response
-import sqlite3
+import psycopg2
 import os
 import csv
 import io
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -14,35 +17,25 @@ app.secret_key = 'learnova_2026_secret'
 
 DASHBOARD_PASSWORD = 'admin123'
 
-def get_db_path():
-    local = os.path.join(BASE_DIR, 'respuestas.db')
-    try:
-        with open(local, 'a'):
-            pass
-        return local
-    except OSError:
-        return '/tmp/respuestas.db'
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-DB_PATH = get_db_path()
+def get_conn():
+    return psycopg2.connect(DATABASE_URL)
 
 def crear_db():
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_conn()
         cursor = conn.cursor()
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS respuestas (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fecha TEXT DEFAULT (datetime('now', 'localtime')),
+            id SERIAL PRIMARY KEY,
+            fecha TIMESTAMP DEFAULT NOW(),
             tema TEXT,
             p1 TEXT, p2 TEXT, p3 TEXT, p4 TEXT,
             p5 TEXT, p6 TEXT, p7 TEXT, p8 TEXT,
             p9 TEXT, p10 TEXT, p11 TEXT, p12 TEXT
         )
         """)
-        try:
-            cursor.execute("ALTER TABLE respuestas ADD COLUMN fecha TEXT")
-        except:
-            pass
         conn.commit()
         conn.close()
     except Exception as e:
@@ -55,7 +48,7 @@ crear_db()
 @app.route('/')
 def landing():
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_conn()
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM respuestas")
         total = cursor.fetchone()[0]
@@ -89,11 +82,11 @@ def resultado():
             kinestesico += 1
 
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_conn()
         cursor = conn.cursor()
         cursor.execute("""
-        INSERT INTO respuestas (fecha,tema,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12)
-        VALUES (datetime('now','localtime'),?,?,?,?,?,?,?,?,?,?,?,?,?)
+        INSERT INTO respuestas (tema,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """, (tema, *respuestas))
         conn.commit()
         conn.close()
@@ -209,14 +202,14 @@ def dashboard():
     periodo = request.args.get('periodo', 'todo')
 
     if periodo == 'hoy':
-        fecha_filter = "WHERE date(fecha) = date('now', 'localtime')"
+        fecha_filter = "WHERE fecha::date = CURRENT_DATE"
     elif periodo == 'semana':
-        fecha_filter = "WHERE fecha >= datetime('now', '-7 days', 'localtime')"
+        fecha_filter = "WHERE fecha >= NOW() - INTERVAL '7 days'"
     else:
         fecha_filter = ""
 
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_conn()
         cursor = conn.cursor()
 
         cursor.execute(f"SELECT COUNT(*) FROM respuestas {fecha_filter}")
@@ -240,7 +233,7 @@ def dashboard():
         for row in cursor.fetchall():
             recientes.append({
                 'id': row[0],
-                'fecha': row[1] or '—',
+                'fecha': str(row[1])[:16] if row[1] else '—',
                 'tema': row[2],
                 'estilo': calcular_estilo_fila(row[3:])
             })
@@ -260,7 +253,7 @@ def export_csv():
     if not session.get('dashboard_auth'):
         return redirect(url_for('dashboard_login'))
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_conn()
         cursor = conn.cursor()
         cursor.execute("SELECT id, fecha, tema, p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12 FROM respuestas ORDER BY id DESC")
         rows = cursor.fetchall()
