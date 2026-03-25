@@ -61,6 +61,93 @@ def landing():
 def encuesta():
     return render_template('encuesta.html')
 
+PLANES = {
+    "Saberes y pensamiento científico": {
+        "visual": [
+            "Ver un video explicativo de matemáticas o ciencias en YouTube",
+            "Crear un mapa mental con fórmulas y conceptos clave",
+            "Buscar infografías o diagramas científicos del tema",
+            "Subrayar y colorear tus apuntes por categorías o pasos",
+        ],
+        "auditivo": [
+            "Escuchar una explicación de ciencias o matemáticas en YouTube",
+            "Leer en voz alta fórmulas, definiciones y procedimientos",
+            "Buscar un podcast o video explicativo del tema científico",
+            "Explicarle el concepto a alguien más con tus propias palabras",
+        ],
+        "kinestesico": [
+            "Resolver ejercicios y problemas de matemáticas o ciencias",
+            "Hacer un experimento o simulación del tema estudiado",
+            "Crear un proyecto pequeño aplicando el concepto aprendido",
+            "Buscar actividades interactivas de ciencias en Khan Academy",
+        ],
+        "busqueda": "matematicas+ciencias+explicacion",
+    },
+    "Ética, naturaleza y sociedades": {
+        "visual": [
+            "Ver documentales o videos sobre historia, geografía o ética",
+            "Crear una línea de tiempo visual con fechas y eventos clave",
+            "Buscar mapas, infografías históricas o diagramas geográficos",
+            "Subrayar tus apuntes por periodos históricos o regiones",
+        ],
+        "auditivo": [
+            "Escuchar documentales o audios sobre historia y geografía",
+            "Leer en voz alta tus apuntes de ética o eventos históricos",
+            "Buscar podcasts sobre temas sociales, culturales o ambientales",
+            "Explicar eventos históricos o dilemas éticos a alguien más",
+        ],
+        "kinestesico": [
+            "Participar en un debate o discusión sobre un tema ético o histórico",
+            "Hacer una línea de tiempo física o maqueta geográfica",
+            "Crear un proyecto sobre un tema social, ambiental o histórico",
+            "Investigar un lugar histórico o natural cercano a tu comunidad",
+        ],
+        "busqueda": "historia+geografia+etica+sociedad",
+    },
+    "Lenguajes": {
+        "visual": [
+            "Ver series, películas o videos en español o inglés con subtítulos",
+            "Crear fichas de vocabulario nuevo con imágenes y ejemplos",
+            "Buscar infografías de gramática, ortografía o estructura textual",
+            "Subrayar textos y marcar reglas gramaticales con colores",
+        ],
+        "auditivo": [
+            "Escuchar música, podcasts o radio en el idioma que estudias",
+            "Leer textos en voz alta para practicar pronunciación y ritmo",
+            "Buscar audiolibros o lecturas guiadas en español o inglés",
+            "Explicar en voz alta reglas gramaticales que acabas de aprender",
+        ],
+        "kinestesico": [
+            "Practicar conversaciones en español o inglés con alguien",
+            "Escribir un diario, carta o historia en el idioma que estudias",
+            "Participar en una exposición oral, debate o lectura dramatizada",
+            "Buscar juegos de palabras o apps interactivas de idiomas",
+        ],
+        "busqueda": "español+ingles+lenguaje+aprendizaje",
+    },
+    "De lo humano y lo comunitario": {
+        "visual": [
+            "Ver videos de técnicas deportivas, rutinas o bienestar emocional",
+            "Crear un diagrama visual de rutinas y hábitos saludables",
+            "Buscar infografías de salud física, emocional o convivencia",
+            "Hacer un mapa visual de tus metas personales y valores",
+        ],
+        "auditivo": [
+            "Escuchar podcasts sobre bienestar emocional, salud o deporte",
+            "Leer en voz alta textos sobre convivencia, valores o cuidado personal",
+            "Buscar meditaciones guiadas o audios de relajación y motivación",
+            "Compartir en voz alta tus reflexiones sobre el tema con alguien",
+        ],
+        "kinestesico": [
+            "Practicar las actividades físicas o deportes del tema estudiado",
+            "Llevar un diario emocional con reflexiones del día a día",
+            "Participar en actividades comunitarias o proyectos sociales",
+            "Diseñar tu propia rutina de ejercicio o bienestar semanal",
+        ],
+        "busqueda": "educacion+fisica+socioemocional+bienestar",
+    },
+}
+
 @app.route('/resultado', methods=['POST'])
 def resultado():
     visual = 0
@@ -68,7 +155,6 @@ def resultado():
     kinestesico = 0
 
     tema = request.form['tema']
-    tema_url = tema.replace(' ', '+')
     respuestas = []
 
     for i in range(1, 13):
@@ -93,75 +179,65 @@ def resultado():
     except Exception as e:
         print(f"[DB] Error al guardar: {e}")
 
+    datos_tema = PLANES.get(tema, PLANES["Saberes y pensamiento científico"])
+    busqueda = datos_tema["busqueda"]
+
     if visual > auditivo and visual > kinestesico:
         estilo = "Visual"
         icono = "👁️"
+        clave_estilo = "visual"
         metodos = [
             ("🗺️", "Mapas mentales", "Organiza ideas visualmente"),
             ("🎬", "Videos educativos", "Aprende viendo explicaciones"),
             ("📊", "Diagramas e infografías", "Convierte info en imágenes"),
             ("🖊️", "Subrayar con colores", "Destaca lo más importante"),
         ]
-        plan = [
-            f"Ver un video introductorio sobre {tema} en YouTube",
-            "Crear un mapa mental con los conceptos principales",
-            f"Buscar infografías o diagramas que resuman {tema}",
-            "Subrayar y colorear tus apuntes por categorías",
-        ]
         recursos = [
             {"icono": "▶️", "nombre": "YouTube", "desc": "Videos visuales", "color": "#FF0000",
-             "url": f"https://www.youtube.com/results?search_query={tema_url}+explicacion+visual"},
+             "url": f"https://www.youtube.com/results?search_query={busqueda}+visual"},
             {"icono": "📚", "nombre": "Khan Academy", "desc": "Lecciones con diagramas", "color": "#14BF96",
-             "url": f"https://www.khanacademy.org/search?page_search_query={tema_url}"},
+             "url": f"https://www.khanacademy.org/search?page_search_query={busqueda}"},
             {"icono": "📖", "nombre": "Wikipedia", "desc": "Referencia con imágenes", "color": "#3366CC",
-             "url": f"https://es.wikipedia.org/w/index.php?search={tema_url}"},
+             "url": f"https://es.wikipedia.org/w/index.php?search={busqueda}"},
         ]
     elif auditivo > visual and auditivo > kinestesico:
         estilo = "Auditivo"
         icono = "👂"
+        clave_estilo = "auditivo"
         metodos = [
             ("🎙️", "Podcasts y audios", "Escucha contenido educativo"),
             ("📢", "Leer en voz alta", "Activa tu memoria auditiva"),
             ("👥", "Explicar a otros", "Enseña y aprenderás más"),
             ("🎤", "Grabar tu voz", "Repasa escuchándote a ti mismo"),
         ]
-        plan = [
-            f"Escuchar una explicación en YouTube sobre {tema}",
-            "Leer el tema en voz alta o grabarte explicándolo",
-            f"Buscar un podcast o audio educativo sobre {tema}",
-            "Explicarle el tema a alguien más con tus propias palabras",
-        ]
         recursos = [
             {"icono": "▶️", "nombre": "YouTube", "desc": "Explicaciones en audio/video", "color": "#FF0000",
-             "url": f"https://www.youtube.com/results?search_query={tema_url}+explicacion"},
+             "url": f"https://www.youtube.com/results?search_query={busqueda}+explicacion"},
             {"icono": "📚", "nombre": "Khan Academy", "desc": "Lecciones paso a paso", "color": "#14BF96",
-             "url": f"https://www.khanacademy.org/search?page_search_query={tema_url}"},
+             "url": f"https://www.khanacademy.org/search?page_search_query={busqueda}"},
             {"icono": "📖", "nombre": "Wikipedia", "desc": "Resumen del tema", "color": "#3366CC",
-             "url": f"https://es.wikipedia.org/w/index.php?search={tema_url}"},
+             "url": f"https://es.wikipedia.org/w/index.php?search={busqueda}"},
         ]
     else:
         estilo = "Kinestésico"
         icono = "✋"
+        clave_estilo = "kinestesico"
         metodos = [
             ("🧪", "Ejercicios prácticos", "Aprende haciendo"),
             ("🔬", "Experimentos", "Explora con tus manos"),
             ("🎮", "Juegos educativos", "Gamifica tu aprendizaje"),
             ("🛠️", "Proyectos", "Construye para entender"),
         ]
-        plan = [
-            f"Buscar ejercicios prácticos sobre {tema} en Khan Academy",
-            f"Intentar resolver un problema o actividad de {tema}",
-            "Crear un pequeño proyecto aplicando lo que aprendiste",
-            f"Buscar experimentos o simulaciones de {tema} en YouTube",
-        ]
         recursos = [
-            {"icono": "▶️", "nombre": "YouTube", "desc": "Tutoriales y experimentos", "color": "#FF0000",
-             "url": f"https://www.youtube.com/results?search_query={tema_url}+ejercicios+practicos"},
+            {"icono": "▶️", "nombre": "YouTube", "desc": "Tutoriales y actividades", "color": "#FF0000",
+             "url": f"https://www.youtube.com/results?search_query={busqueda}+ejercicios+practicos"},
             {"icono": "📚", "nombre": "Khan Academy", "desc": "Ejercicios interactivos", "color": "#14BF96",
-             "url": f"https://www.khanacademy.org/search?page_search_query={tema_url}"},
+             "url": f"https://www.khanacademy.org/search?page_search_query={busqueda}"},
             {"icono": "📖", "nombre": "Wikipedia", "desc": "Contexto del tema", "color": "#3366CC",
-             "url": f"https://es.wikipedia.org/w/index.php?search={tema_url}"},
+             "url": f"https://es.wikipedia.org/w/index.php?search={busqueda}"},
         ]
+
+    plan = datos_tema[clave_estilo]
 
     return render_template('resultado.html',
         tema=tema, estilo=estilo, icono=icono,

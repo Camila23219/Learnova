@@ -111,33 +111,76 @@
       box-shadow: var(--shadow);
     }
 
-    .topic-card label {
+    .topic-card > label {
       display: block;
       font-size: 13px;
       font-weight: 600;
       color: var(--text-light);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
 
-    .topic-card input[type="text"] {
-      width: 100%;
-      padding: 12px 16px;
+    .tema-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tema-opcion { position: relative; }
+
+    .tema-opcion input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .tema-opcion label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      padding: 16px 12px;
       border: 2px solid var(--border);
-      border-radius: 10px;
-      font-size: 15px;
-      font-family: inherit;
-      color: var(--text);
-      transition: border-color 0.2s;
-      outline: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
     }
 
-    .topic-card input[type="text"]:focus {
+    .tema-opcion label:hover {
       border-color: var(--accent);
+      background: var(--primary-light);
     }
 
-    .topic-card input[type="text"]::placeholder { color: #CBD5E1; }
+    .tema-opcion input[type="radio"]:checked + label {
+      border-color: var(--accent);
+      background: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(30,144,214,0.2);
+    }
+
+    .tema-icon { font-size: 28px; line-height: 1; }
+
+    .tema-nombre {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .tema-sub {
+      font-size: 11px;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 480px) {
+      .tema-grid { grid-template-columns: 1fr; }
+      .tema-opcion label { flex-direction: row; text-align: left; gap: 12px; padding: 12px 14px; }
+      .tema-icon { font-size: 24px; flex-shrink: 0; }
+    }
 
     /* PREGUNTA */
     .pregunta {
@@ -302,7 +345,6 @@
       .progress-text { font-size: 12px; }
       .container { padding: 16px 10px 48px; }
       .topic-card { padding: 18px; border-radius: 12px; }
-      .topic-card input[type="text"] { font-size: 14px; }
       .pregunta { padding: 16px; border-radius: 12px; }
       .pregunta p { font-size: 14px; }
       .opcion label { padding: 10px 12px; font-size: 13px; }
@@ -381,8 +423,46 @@
 
   <!-- TEMA -->
   <div class="topic-card">
-    <label for="tema">¿Qué tema quieres aprender?</label>
-    <input type="text" name="tema" id="tema" placeholder="Ej: Matemáticas, Programación, Historia..." required>
+    <label>¿En qué campo quieres aprender?</label>
+    <div class="tema-grid">
+
+      <div class="tema-opcion">
+        <input type="radio" name="tema" id="tema1" value="Saberes y pensamiento científico" required>
+        <label for="tema1">
+          <span class="tema-icon">🔬</span>
+          <span class="tema-nombre">Saberes y pensamiento científico</span>
+          <span class="tema-sub">Ciencias y Matemáticas</span>
+        </label>
+      </div>
+
+      <div class="tema-opcion">
+        <input type="radio" name="tema" id="tema2" value="Ética, naturaleza y sociedades">
+        <label for="tema2">
+          <span class="tema-icon">🌍</span>
+          <span class="tema-nombre">Ética, naturaleza y sociedades</span>
+          <span class="tema-sub">Geografía, Historia y Ética</span>
+        </label>
+      </div>
+
+      <div class="tema-opcion">
+        <input type="radio" name="tema" id="tema3" value="Lenguajes">
+        <label for="tema3">
+          <span class="tema-icon">📚</span>
+          <span class="tema-nombre">Lenguajes</span>
+          <span class="tema-sub">Español e Inglés</span>
+        </label>
+      </div>
+
+      <div class="tema-opcion">
+        <input type="radio" name="tema" id="tema4" value="De lo humano y lo comunitario">
+        <label for="tema4">
+          <span class="tema-icon">🤝</span>
+          <span class="tema-nombre">De lo humano y lo comunitario</span>
+          <span class="tema-sub">Ed. Física y Socioemocional</span>
+        </label>
+      </div>
+
+    </div>
   </div>
 
   <!-- P1 -->
